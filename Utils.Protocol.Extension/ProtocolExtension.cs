@@ -6,6 +6,9 @@
 
     using Skyline.DataMiner.Scripting;
 
+    /// <summary>
+    /// Extension of the SLProtocol class.
+    /// </summary>
     public static class ProtocolExtension
     {
         /// <summary>
