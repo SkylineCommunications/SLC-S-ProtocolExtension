@@ -17,7 +17,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>SkylineCommunications</Authors>
     <Company>Skyline Communications</Company>
-    <Description></Description>
+    <Description>This package contains useful protocol extension providing coder friendly and high level wrapper methods for the SLProtocol class.</Description>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/SkylineCommunications/SLC-S-ProtocolExtension</RepositoryUrl>
   </PropertyGroup>
