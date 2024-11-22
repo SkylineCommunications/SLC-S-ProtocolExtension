@@ -86,7 +86,7 @@
         /// </remarks>
         public static object GetCell(this SLProtocol protocol, int tablePid, string rowPK, int columnIdx)
         {
-            if (rowPK == null)
+            if (String.IsNullOrEmpty(rowPK))
                 throw new ArgumentNullException(nameof(rowPK));
 
             return protocol.NotifyProtocol(122, new object[] { tablePid, rowPK, columnIdx + 1 }, null);
@@ -146,7 +146,7 @@
         /// <exception cref="ArgumentNullException"><paramref name="rowPK"/> is <see langword="null"/>.</exception>
         public static bool SetCell(this SLProtocol protocol, int tablePid, string rowPK, int columnIdx, object value, DateTime? dateTime = null)
         {
-            if (rowPK == null)
+            if (String.IsNullOrEmpty(rowPK))
                 throw new ArgumentNullException(nameof(rowPK));
 
             if (dateTime == null)
