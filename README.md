@@ -1,7 +1,8 @@
 # Skyline.DataMiner.Utils.Protocol.Extension
 
 ## About
-
+This package contains various coder-friendly and high-level wrappers for the most used low-level SLProtocol methods.
+When using this package, [these snippets](Utils.Protocol.Extension/Snippets) can also help you build the necessary arguments.
 
 
 ## Projects

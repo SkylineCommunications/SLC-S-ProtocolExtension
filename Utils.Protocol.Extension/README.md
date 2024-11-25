@@ -2,7 +2,7 @@
 
 ## About
 This package contains various coder-friendly and high-level wrappers for the most used low-level SLProtocol methods.
-When using this package, [these snippets](Utils.Protocol.Extension/Snippets) can also help you build the necessary arguments.
+When using this package, [these snippets](Snippets) can also help you build the necessary arguments.
 
 
 ### About DataMiner
