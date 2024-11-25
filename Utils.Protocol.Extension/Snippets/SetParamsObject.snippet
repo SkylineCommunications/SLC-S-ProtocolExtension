@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippet Format="1.0.0" xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+	<Header>
+		<Title>SetParamsObject</Title>
+		<Author>SVD, Skyline Communications</Author>
+		<Description>Adds the needed dictionary for the setParams snippet.</Description>
+		<Shortcut>SetParamsObject</Shortcut>
+		<SnippetTypes>
+			<SnippetType>Expansion</SnippetType>
+		</SnippetTypes>
+	</Header>
+	<Snippet>
+        <Imports>
+            <Import>
+                <Namespace>System.Linq</Namespace>
+            </Import>
+        </Imports>
+		<Code Language="CSharp">
+			<![CDATA[var paramsToSet = new Dictionary<int, object>();$end$]]>
+		</Code>
+	</Snippet>
+</CodeSnippet>
