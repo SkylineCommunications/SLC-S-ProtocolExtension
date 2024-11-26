@@ -259,7 +259,7 @@
         /// <param name="columnsValues">The column values for each column to update. First item should contain the primary keys as <see cref="string" />.</param>
         /// <param name="dateTime">The time stamp for the new values (in case of historySets).</param>
         /// <exception cref="ArgumentNullException"><paramref name="columnsPid"/> or <paramref name="columnsValues"/> is <see langword="null"/>.</exception>
-        public static void SetColumns(this SLProtocol protocol, IList<int> columnsPid, IList<IEnumerable<object>> columnsValues, DateTime? dateTime = null)
+        public static void SetColumns(this SLProtocol protocol, int[] columnsPid, object[][] columnsValues, DateTime? dateTime = null)
         {
             // Sanity checks
             if (columnsPid == null)
@@ -268,11 +268,11 @@
             if (columnsValues == null)
                 throw new ArgumentNullException(nameof(columnsValues));
 
-            if (columnsPid.Count != columnsValues.Count)
-                throw new ArgumentException($"Length of {nameof(columnsPid)} '{columnsPid.Count}' != length of {nameof(columnsValues)} '{columnsValues.Count}'.");
+            if (columnsPid.Length != columnsValues.Length)
+                throw new ArgumentException($"Length of {nameof(columnsPid)} '{columnsPid.Length}' != length of {nameof(columnsValues)} '{columnsValues.Length}'.");
 
             // Prepare data
-            int columnsCount = columnsPid.Count;
+            int columnsCount = columnsPid.Length;
 
             object[] columnsPidArray = new object[columnsCount + 1];
             object[] columnsValuesArray = new object[columnsCount];
