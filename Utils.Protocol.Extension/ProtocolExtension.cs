@@ -163,47 +163,50 @@
                 - object[][]                        => Efficient but not so flexible
                 - IEnumerable<IEnumarable<object>>  => Full flexibility but less efficient
                 - IList<IEnumerable<object>>        => Decent flexibility and still efficient
-            => We opted for option 3 which seemed like a good middle-ground. */
+            => We opted for option 3 which seemed like a good middle-ground.
+            => After all, we noticed that option 3 doesn't actually provide any extra flexibility since providing List<object[]> doesn't work for some reason,
+                so it's adding extra confusion more than anything else
+            => Going back to option 1 for simplicity/clarity */
 
-        /////// <summary>
-        /////// Sets the specified columns.
-        /////// </summary>
-        /////// <param name="protocol">Link with SLProtocol process.</param>
-        /////// <param name="columnsPid">The column parameter ID of the columns to update. First item should contain the table PID. Primary key column PID should never be provided.</param>
-        /////// <param name="columnsValues">The column values for each column to update. First item should contain the primary keys as <see cref="string" />.</param>
-        /////// <param name="dateTime">The time stamp for the new values (in case of historySets).</param>
-        /////// <exception cref="ArgumentNullException"><paramref name="columnsPid"/> or <paramref name="columnsValues"/> is <see langword="null"/>.</exception>
-        ////public static void SetColumns(this SLProtocol protocol, int[] columnsPid, object[][] columnsValues, DateTime? dateTime = null)
-        ////{
-        ////	// Sanity checks
-        ////	if (columnsPid == null)
-        ////		throw new ArgumentNullException(nameof(columnsPid));
+        /// <summary>
+        /// Sets the specified columns.
+        /// </summary>
+        /// <param name="protocol">Link with SLProtocol process.</param>
+        /// <param name="columnsPid">The column parameter ID of the columns to update. First item should contain the table PID. Primary key column PID should never be provided.</param>
+        /// <param name="columnsValues">The column values for each column to update. First item should contain the primary keys as <see cref="string" />.</param>
+        /// <param name="dateTime">The time stamp for the new values (in case of historySets).</param>
+        /// <exception cref="ArgumentNullException"><paramref name="columnsPid"/> or <paramref name="columnsValues"/> is <see langword="null"/>.</exception>
+        public static void SetColumns(this SLProtocol protocol, int[] columnsPid, object[][] columnsValues, DateTime? dateTime = null)
+        {
+            // Sanity checks
+            if (columnsPid == null)
+                throw new ArgumentNullException(nameof(columnsPid));
 
-        ////	if (columnsValues == null)
-        ////		throw new ArgumentNullException(nameof(columnsValues));
+            if (columnsValues == null)
+                throw new ArgumentNullException(nameof(columnsValues));
 
-        ////	if (columnsPid.Length != columnsValues.Length)
-        ////		throw new ArgumentException($"Length of {nameof(columnsPid)} '{columnsPid.Length}' != length of {nameof(columnsValues)} '{columnsValues.Length}'.");
+            if (columnsPid.Length != columnsValues.Length)
+                throw new ArgumentException($"Length of {nameof(columnsPid)} '{columnsPid.Length}' != length of {nameof(columnsValues)} '{columnsValues.Length}'.");
 
-        ////	// Prepare data
-        ////	int columnsCount = columnsValues.Length;
+            // Prepare data
+            int columnsCount = columnsPid.Length;
 
-        ////	object[] columnsPidArray = new object[columnsCount + 1];
-        ////	object[] columnsValuesArray = new object[columnsCount];
+            object[] columnsPidArray = new object[columnsCount + 1];
+            object[] columnsValuesArray = new object[columnsCount];
 
-        ////	for (int i = 0; i < columnsCount; i++)
-        ////	{
-        ////		columnsPidArray[i] = columnsPid[i];
-        ////		columnsValuesArray[i] = columnsValues[i];
-        ////	}
+            for (int i = 0; i < columnsCount; i++)
+            {
+                columnsPidArray[i] = columnsPid[i];
+                columnsValuesArray[i] = columnsValues[i];
+            }
 
-        ////	// Options (Clear & Leave, history sets)
-        ////	object[] setColumnOptions = dateTime == null ? new object[] { true } : new object[] { true, dateTime.Value };
-        ////	columnsPidArray[columnsCount] = setColumnOptions;
+            // Options (Clear & Leave, history sets)
+            object[] setColumnOptions = dateTime == null ? new object[] { true } : new object[] { true, dateTime.Value };
+            columnsPidArray[columnsCount] = setColumnOptions;
 
-        ////	// Set columns
-        ////	protocol.NotifyProtocol(220, columnsPidArray, columnsValuesArray);
-        ////}
+            // Set columns
+            protocol.NotifyProtocol(220, columnsPidArray, columnsValuesArray);
+        }
 
         /////// <summary>
         /////// Sets the specified columns.
@@ -251,45 +254,45 @@
         ////	protocol.NotifyProtocol(220, columnsPidArray, columnsValuesArray);
         ////}
 
-        /// <summary>
-        /// Sets the specified columns.
-        /// </summary>
-        /// <param name="protocol">Link with SLProtocol process.</param>
-        /// <param name="columnsPid">The column parameter ID of the columns to update. First item should contain the table PID. Primary key column PID should never be provided.</param>
-        /// <param name="columnsValues">The column values for each column to update. First item should contain the primary keys as <see cref="string" />.</param>
-        /// <param name="dateTime">The time stamp for the new values (in case of historySets).</param>
-        /// <exception cref="ArgumentNullException"><paramref name="columnsPid"/> or <paramref name="columnsValues"/> is <see langword="null"/>.</exception>
-        public static void SetColumns(this SLProtocol protocol, int[] columnsPid, object[][] columnsValues, DateTime? dateTime = null)
-        {
-            // Sanity checks
-            if (columnsPid == null)
-                throw new ArgumentNullException(nameof(columnsPid));
+        /////// <summary>
+        /////// Sets the specified columns.
+        /////// </summary>
+        /////// <param name="protocol">Link with SLProtocol process.</param>
+        /////// <param name="columnsPid">The column parameter ID of the columns to update. First item should contain the table PID. Primary key column PID should never be provided.</param>
+        /////// <param name="columnsValues">The column values for each column to update. First item should contain the primary keys as <see cref="string" />.</param>
+        /////// <param name="dateTime">The time stamp for the new values (in case of historySets).</param>
+        /////// <exception cref="ArgumentNullException"><paramref name="columnsPid"/> or <paramref name="columnsValues"/> is <see langword="null"/>.</exception>
+        ////public static void SetColumns(this SLProtocol protocol, IList<int> columnsPid, IList<IEnumerable<object>> columnsValues, DateTime? dateTime = null)
+        ////{
+        ////    // Sanity checks
+        ////    if (columnsPid == null)
+        ////        throw new ArgumentNullException(nameof(columnsPid));
 
-            if (columnsValues == null)
-                throw new ArgumentNullException(nameof(columnsValues));
+        ////    if (columnsValues == null)
+        ////        throw new ArgumentNullException(nameof(columnsValues));
 
-            if (columnsPid.Length != columnsValues.Length)
-                throw new ArgumentException($"Length of {nameof(columnsPid)} '{columnsPid.Length}' != length of {nameof(columnsValues)} '{columnsValues.Length}'.");
+        ////    if (columnsPid.Count != columnsValues.Count)
+        ////        throw new ArgumentException($"Length of {nameof(columnsPid)} '{columnsPid.Count}' != length of {nameof(columnsValues)} '{columnsValues.Count}'.");
 
-            // Prepare data
-            int columnsCount = columnsPid.Length;
+        ////    // Prepare data
+        ////    int columnsCount = columnsPid.Count;
 
-            object[] columnsPidArray = new object[columnsCount + 1];
-            object[] columnsValuesArray = new object[columnsCount];
+        ////    object[] columnsPidArray = new object[columnsCount + 1];
+        ////    object[] columnsValuesArray = new object[columnsCount];
 
-            for (int i = 0; i < columnsCount; i++)
-            {
-                columnsPidArray[i] = columnsPid[i];
-                columnsValuesArray[i] = columnsValues[i].ToArray();
-            }
+        ////    for (int i = 0; i < columnsCount; i++)
+        ////    {
+        ////        columnsPidArray[i] = columnsPid[i];
+        ////        columnsValuesArray[i] = columnsValues[i].ToArray();
+        ////    }
 
-            // Options (Clear & Leave, history sets)
-            object[] setColumnOptions = dateTime == null ? new object[] { true } : new object[] { true, dateTime.Value };
-            columnsPidArray[columnsCount] = setColumnOptions;
+        ////    // Options (Clear & Leave, history sets)
+        ////    object[] setColumnOptions = dateTime == null ? new object[] { true } : new object[] { true, dateTime.Value };
+        ////    columnsPidArray[columnsCount] = setColumnOptions;
 
-            // Set columns
-            protocol.NotifyProtocol(220, columnsPidArray, columnsValuesArray);
-        }
+        ////    // Set columns
+        ////    protocol.NotifyProtocol(220, columnsPidArray, columnsValuesArray);
+        ////}
 
         /// <summary>
         /// Sets the specified columns (Requires Main 10.0.0 [CU?] or Feature 9.6.6 [CU?] (see RN 23815)).
