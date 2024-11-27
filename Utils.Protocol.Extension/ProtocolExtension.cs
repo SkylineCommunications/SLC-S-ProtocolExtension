@@ -18,7 +18,7 @@
         /// <param name="tablePid">The ID of the table parameter.</param>
         /// <param name="keysToDelete">The primary keys of the rows to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="keysToDelete"/> is <see langword="null"/>.</exception>
-        public static void DeleteRow(this SLProtocol protocol, int tablePid, IEnumerable<object> keysToDelete)
+        public static void DeleteRows(this SLProtocol protocol, int tablePid, IEnumerable<object> keysToDelete)
         {
             // Sanity checks
             if (keysToDelete == null)
@@ -50,7 +50,7 @@
         /// <param name="tablePid">The ID of the table parameter.</param>
         /// <param name="keysToDelete">The primary keys of the rows to remove.</param>
         /// <exception cref="ArgumentNullException"><paramref name="keysToDelete"/> is <see langword="null"/>.</exception>
-        public static void DeleteRow(this SLProtocol protocol, int tablePid, IEnumerable<string> keysToDelete)
+        public static void DeleteRows(this SLProtocol protocol, int tablePid, IEnumerable<string> keysToDelete)
         {
             // Sanity checks
             if (keysToDelete == null)
