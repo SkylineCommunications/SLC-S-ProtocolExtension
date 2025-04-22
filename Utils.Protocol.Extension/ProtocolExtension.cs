@@ -130,6 +130,16 @@
         }
 
         /// <summary>
+        /// Run an action present within the protocol.xml.
+        /// </summary>
+        /// <param name="protocol">Link with SLProtocol process.</param>
+        /// <param name="actionId">the ID of the action.</param>
+        public static void RunAction(this SLProtocol protocol, int actionId)
+        {
+            protocol.NotifyProtocol(221/*NT_RUN_ACTION*/, actionId, null);
+        }
+
+        /// <summary>
         /// Sets the value of a cell in a table, identified by the primary key of the row and column position, with the specified value.
         /// Use <see langword="null"/> as <paramref name="value"/> to clear the cell.
         /// The <paramref name="tablePid"/> can be retrieved with the static Parameter class.
