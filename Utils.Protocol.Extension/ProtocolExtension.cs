@@ -338,7 +338,7 @@
         }
 
         /// <summary>
-        /// Sets the specified columns (Requires Main 10.0.0 [CU?] or Feature 9.6.6 [CU?] (see RN 23815)).
+        /// Sets the specified columns.
         /// </summary>
         /// <param name="protocol">Link with SLProtocol process.</param>
         /// <param name="setColumnsData">The new column values per column PID. The first dictionary item should contain table PID as key and primary keys as value.</param>
