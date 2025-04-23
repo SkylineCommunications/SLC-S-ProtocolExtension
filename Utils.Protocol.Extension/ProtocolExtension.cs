@@ -130,7 +130,7 @@
         }
 
         /// <summary>
-        /// Run an action present within the protocol.xml.
+        /// Runs the specified action.
         /// </summary>
         /// <param name="protocol">Link with SLProtocol process.</param>
         /// <param name="actionId">the ID of the action.</param>
