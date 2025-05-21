@@ -405,6 +405,119 @@
         }
 
         /// <summary>
+        /// Sets the specified columns AND deletes rows of keys not passed in.
+        /// </summary>
+        /// <param name="protocol">Link with SLProtocol process.</param>
+        /// <param name="columnsPid">The column parameter ID of the columns to update. First item should contain the table PID. Primary key column PID should never be provided.</param>
+        /// <param name="columnsValues">The column values for each column to update. First item should contain the primary keys as <see cref="string" />.</param>
+        /// <param name="dateTime">The time stamp for the new values (in case of historySets).</param>
+        /// <exception cref="ArgumentNullException"><paramref name="columnsPid"/> or <paramref name="columnsValues"/> is <see langword="null"/>.</exception>
+        public static void SetColumnsFull(this SLProtocol protocol, IList<int> columnsPid, IReadOnlyList<IEnumerable<object>> columnsValues, DateTime? dateTime = null)
+        {
+            // Sanity checks
+            if (columnsPid == null)
+                throw new ArgumentNullException(nameof(columnsPid));
+
+            if (columnsValues == null)
+                throw new ArgumentNullException(nameof(columnsValues));
+
+            if (columnsPid.Count != columnsValues.Count)
+                throw new ArgumentException($"Length of {nameof(columnsPid)} '{columnsPid.Count}' != length of {nameof(columnsValues)} '{columnsValues.Count}'.");
+
+            // Prepare data
+            int columnsCount = columnsPid.Count;
+
+            object[] columnsPidArray = new object[columnsCount + 1];
+            object[] columnsValuesArray = new object[columnsCount];
+
+            for (int i = 0; i < columnsCount; i++)
+            {
+                columnsPidArray[i] = columnsPid[i];
+                columnsValuesArray[i] = columnsValues[i].ToArray();
+            }
+
+            // Options (Clear & Leave, history sets)
+            object[] setColumnOptions = dateTime == null ? new object[] { true } : new object[] { true, dateTime.Value };
+            columnsPidArray[columnsCount] = setColumnOptions;
+
+            // Set columns
+            protocol.NotifyProtocol(220, columnsPidArray, columnsValuesArray);
+
+            // Table Clean up logic
+            int tablePid = columnsPid[0];
+            string[] oldTableKeys = protocol.GetKeys(tablePid);
+            IEnumerable<string> newTableKeys = ((object[])columnsValuesArray[0]).Select(x => Convert.ToString(x));
+
+            var keysToDelete = oldTableKeys.Except(newTableKeys);
+            protocol.DeleteRows(tablePid, keysToDelete);
+        }
+
+        /// <summary>
+        /// Sets the specified columns AND deletes rows of keys not passed in.
+        /// </summary>
+        /// <param name="protocol">Link with SLProtocol process.</param>
+        /// <param name="setColumnsData">The new column values per column PID. The first dictionary item should contain table PID as key and primary keys as value.</param>
+        /// <param name="dateTime">The time stamp for the new values (in case of historySets).</param>
+        /// <exception cref="ArgumentNullException"><paramref name="setColumnsData"/> is <see langword="null"/>.</exception>
+        public static void SetColumnsFull(this SLProtocol protocol, IDictionary<int, List<object>> setColumnsData, DateTime? dateTime = null)
+        {
+            // Sanity checks
+            if (setColumnsData == null)
+                throw new ArgumentNullException(nameof(setColumnsData));
+
+            if (setColumnsData.Count == 0)
+                return;
+
+            int rowCount = setColumnsData.ElementAt(0).Value.Count;
+            if (rowCount == 0)
+            {
+                // No rows to update
+                return;
+            }
+
+            // Prepare data
+            object[] setColumnPids = new object[setColumnsData.Count + 1];
+            object[] setColumnValues = new object[setColumnsData.Count];
+
+            int columnPos = 0;
+            foreach (var setColumnData in setColumnsData)
+            {
+                // Sanity checks
+                if (setColumnData.Value.Count != rowCount)
+                {
+                    protocol.Log(
+                        $"QA{protocol.QActionID}|SetColumns|SetColumns on table '{setColumnsData.Keys.ToArray()[0]}' failed. " +
+                            $"Not all columns contain the same number of rows.",
+                        LogType.Error,
+                        LogLevel.NoLogging);
+
+                    return;
+                }
+
+                // Build set columns objects
+                setColumnPids[columnPos] = setColumnData.Key;
+                setColumnValues[columnPos] = setColumnData.Value.ToArray();
+
+                columnPos++;
+            }
+
+            // Options (Clear & Leave, history sets)
+            object[] setColumnOptions = dateTime == null ? new object[] { true } : new object[] { true, dateTime.Value };
+            setColumnPids[setColumnPids.Length - 1] = setColumnOptions;
+
+            // Set columns
+            protocol.NotifyProtocol(220, setColumnPids, setColumnValues);
+
+            // Table Clean up logic
+            int tablePid = Convert.ToInt32(setColumnPids[0]);
+            string[] oldTableKeys = protocol.GetKeys(tablePid);
+            IEnumerable<string> newTableKeys = ((object[])setColumnValues[0]).Select(x => Convert.ToString(x));
+
+            var keysToDelete = oldTableKeys.Except(newTableKeys);
+            protocol.DeleteRows(tablePid, keysToDelete);
+        }
+
+        /// <summary>
         /// Sets the specified parameters to the specified values.
         /// </summary>
         /// <param name="protocol">Link with SLProtocol process.</param>
