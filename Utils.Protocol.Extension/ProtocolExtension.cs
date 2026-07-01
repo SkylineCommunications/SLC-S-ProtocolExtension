@@ -396,7 +396,7 @@
             for (int i = 0; i < columnsCount; i++)
             {
                 columnsPidArray[i] = columnsPid[i];
-                columnsValuesArray[i] = columnsValues[i].ToArray();
+                columnsValuesArray[i] = columnsValues[i] as object[] ?? columnsValues[i].ToArray();
             }
 
             // Options (Clear & Leave, history sets)
