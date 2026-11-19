@@ -375,6 +375,7 @@
         /// <param name="columnsValues">The column values for each column to update. First item should contain the primary keys as <see cref="string" />.</param>
         /// <param name="dateTime">The time stamp for the new values (in case of historySets).</param>
         /// <exception cref="ArgumentNullException"><paramref name="columnsPid"/> or <paramref name="columnsValues"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentException">The lengths of <paramref name="columnsPid"/> and <paramref name="columnsValues"/> differ, or an item in <paramref name="columnsValues"/> is <see langword="null"/>.</exception>
         public static void SetColumns(this SLProtocol protocol, IList<int> columnsPid, IReadOnlyList<IEnumerable<object>> columnsValues, DateTime? dateTime = null)
         {
             // Sanity checks
@@ -386,6 +387,12 @@
 
             if (columnsPid.Count != columnsValues.Count)
                 throw new ArgumentException($"Length of {nameof(columnsPid)} '{columnsPid.Count}' != length of {nameof(columnsValues)} '{columnsValues.Count}'.");
+
+            for (int i = 0; i < columnsValues.Count; i++)
+            {
+                if (columnsValues[i] == null)
+                    throw new ArgumentException($"Item at index {i} in {nameof(columnsValues)} is null.", nameof(columnsValues));
+            }
 
             // Prepare data
             int columnsCount = columnsPid.Count;
