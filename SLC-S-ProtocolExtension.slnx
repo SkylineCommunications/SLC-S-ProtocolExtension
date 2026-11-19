@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Utils.Protocol.Extension/Utils.Protocol.Extension.csproj" />
+</Solution>
