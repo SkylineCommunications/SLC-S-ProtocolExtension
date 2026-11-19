@@ -388,12 +388,6 @@
             if (columnsPid.Count != columnsValues.Count)
                 throw new ArgumentException($"Length of {nameof(columnsPid)} '{columnsPid.Count}' != length of {nameof(columnsValues)} '{columnsValues.Count}'.");
 
-            for (int i = 0; i < columnsValues.Count; i++)
-            {
-                if (columnsValues[i] == null)
-                    throw new ArgumentException($"Item at index {i} in {nameof(columnsValues)} is null.", nameof(columnsValues));
-            }
-
             // Prepare data
             int columnsCount = columnsPid.Count;
 
@@ -402,8 +396,12 @@
 
             for (int i = 0; i < columnsCount; i++)
             {
+                IEnumerable<object> columnValues = columnsValues[i];
+                if (columnValues == null)
+                    throw new ArgumentException($"Item at index {i} in {nameof(columnsValues)} is null.", nameof(columnsValues));
+
                 columnsPidArray[i] = columnsPid[i];
-                columnsValuesArray[i] = columnsValues[i] as object[] ?? columnsValues[i].ToArray();
+                columnsValuesArray[i] = columnValues as object[] ?? columnValues.ToArray();
             }
 
             // Options (Clear & Leave, history sets)
